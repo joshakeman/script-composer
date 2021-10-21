@@ -1,21 +1,16 @@
-import { FC, useRef } from 'react'
+import { FC, useRef, useEffect } from 'react'
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd'
 import { ItemTypes } from './Constants'
 import { XYCoord } from 'dnd-core'
-
-const style = {
-  border: '1px dashed gray',
-  padding: '0.5rem 1rem',
-  marginBottom: '.5rem',
-  backgroundColor: 'white',
-  cursor: 'move',
-}
+import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
 
 export interface CardProps {
   id: any
   text: string
   index: number
   moveCard: (dragIndex: number, hoverIndex: number) => void
+  handleChange: any
 }
 
 interface DragItem {
@@ -24,7 +19,10 @@ interface DragItem {
   type: string
 }
 
-export const Card: FC<CardProps> = ({ id, text, index, moveCard }) => {
+export const Card: FC<CardProps> = ({ id, text, index, moveCard, handleChange }) => {
+    useEffect(() => {
+      }, []);
+
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -96,8 +94,34 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard }) => {
   const opacity = isDragging ? 0 : 1
   drag(drop(ref))
   return (
-    <div ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
+      <>
+    {/* <div ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
       {text}
-    </div>
+    </div> */}
+    <Paper
+    elevation={3}
+    data-handler-id={handlerId}
+    sx={{padding:'12px',
+        backgroundColor:'#f5f5f5',
+        cursor: 'move',
+        marginBottom: '10px',
+        opacity
+    }}
+    ref={ref}
+    >
+        <div style={{textAlign:'left'}}>{index+1}</div>
+        <TextField
+        id="outlined-multiline-flexible"
+        multiline
+        fullWidth={true}
+        value={text}
+        onChange={handleChange(index)}
+        sx={{ 
+            backgroundColor: 'white', 
+            opacity 
+        }}
+    />
+        </Paper>
+    </>
   )
 }
