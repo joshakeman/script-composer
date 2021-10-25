@@ -1,16 +1,27 @@
-import { FC, useRef, useEffect } from 'react'
+import { FC, useRef, useEffect, useState } from 'react'
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd'
 import { ItemTypes } from './Constants'
 import { XYCoord } from 'dnd-core'
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import TimePicker from './TimePicker'
+import Button from '@mui/material/Button';
 
 export interface CardProps {
   id: any
   text: string
+  character: string
   index: number
+  variable: string
   moveCard: (dragIndex: number, hoverIndex: number) => void
   handleChange: any
+  handleCharacterChange: any
+  handleVariableChange: any
+  insertVariable: any
 }
 
 interface DragItem {
@@ -19,9 +30,11 @@ interface DragItem {
   type: string
 }
 
-export const Card: FC<CardProps> = ({ id, text, index, moveCard, handleChange }) => {
+export const Card: FC<CardProps> = ({ id, text, variable, character, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable }) => {
     useEffect(() => {
       }, []);
+  
+  const [time, setTime] = useState<Date | null>(null);
 
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop({
@@ -95,9 +108,6 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, handleChange })
   drag(drop(ref))
   return (
       <>
-    {/* <div ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
-      {text}
-    </div> */}
     <Paper
     elevation={3}
     data-handler-id={handlerId}
@@ -105,11 +115,52 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, handleChange })
         backgroundColor:'#f5f5f5',
         cursor: 'move',
         marginBottom: '10px',
+        width: '90%',
         opacity
     }}
     ref={ref}
     >
-        <div style={{textAlign:'left'}}>{index+1}</div>
+        <div style={{textAlign:'left'}}>Line {index+1}</div>
+        <div className="toolbar">
+          <FormControl sx={{width:'250px', textAlign:'center'}}>
+              <InputLabel id="demo-simple-select-label">Character</InputLabel>
+              <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={character}
+              label="Character"
+              onChange={handleCharacterChange(index)}
+              >
+              <MenuItem value={"Benedick"}>Benedick</MenuItem>
+              <MenuItem value={"Beatrice"}>Beatrice</MenuItem>
+              <MenuItem value={"Hero"}>Hero</MenuItem>
+              </Select>
+          </FormControl>
+          <TimePicker time={time} setTime={setTime} />
+          <FormControl sx={{width:'250px', textAlign:'center'}}>
+              <InputLabel id="demo-simple-select-label">Select Variable</InputLabel>
+              <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={variable}
+              label="Variable"
+              onChange={handleVariableChange(index)}
+              >
+              <MenuItem value={"{{ Pet }}"}>Pet</MenuItem>
+              <MenuItem value={"{{ Name }}"}>Name</MenuItem>
+              <MenuItem value={"{{ City }}"}>City</MenuItem>
+              </Select>
+          </FormControl>
+          <Button
+            disabled={variable === ""}
+            variant="contained"
+            color="secondary"
+            onClick={() => insertVariable(index)}
+          >
+            Add
+          </Button>
+
+        </div>
         <TextField
         id="outlined-multiline-flexible"
         multiline
