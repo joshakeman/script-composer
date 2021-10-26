@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 
 export interface CardProps {
   id: any
+  dayIndex: number
   text: string
   character: string
   index: number
@@ -30,7 +31,7 @@ interface DragItem {
   type: string
 }
 
-export const Card: FC<CardProps> = ({ id, text, variable, character, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable }) => {
+export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable }) => {
     useEffect(() => {
       }, []);
   
@@ -166,7 +167,7 @@ export const Card: FC<CardProps> = ({ id, text, variable, character, index, move
         multiline
         fullWidth={true}
         value={text}
-        onChange={handleChange(index)}
+        onChange={handleChange(dayIndex, index)}
         sx={{ 
             backgroundColor: 'white', 
             opacity 

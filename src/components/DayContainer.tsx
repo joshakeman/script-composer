@@ -1,4 +1,4 @@
-import { FC, useState, useCallback } from 'react'
+import { FC, useState, useCallback, useEffect } from 'react'
 import { Card } from './Card'
 import Button from '@mui/material/Button';
 import update from 'immutability-helper'
@@ -17,21 +17,34 @@ export interface ContainerState {
   lines: Line[]
 }
 
-export interface ContainerProps {
-  index: number
+export interface Day {
+  ix: number
+  lines: Array<Line>
 }
 
-export const DayContainer: FC<ContainerProps> = ({ index }) => {
+export interface ContainerProps {
+  // index: number
+  day: Day
+  setLines: any
+  handleChangeText: any
+}
+
+export const DayContainer: FC<ContainerProps> = ({ day, setLines, handleChangeText }) => {
   {
-    const [lines, setLines] = useState([
-      {
-        id:1, 
-        text:"", 
-        character:"", 
-        selectedVariable:"",
-        variables: [""]
-      }
-    ])
+    // const [lines, setLines] = useState([
+    //   {
+    //     id:1, 
+    //     text:"", 
+    //     character:"", 
+    //     selectedVariable:"",
+    //     variables: [""]
+    //   }
+    // ])
+    useEffect(()=>{
+
+    },[])
+
+    let lines = day.lines
 
     const moveCard = useCallback(
       (dragIndex: number, hoverIndex: number) => {
@@ -48,11 +61,11 @@ export const DayContainer: FC<ContainerProps> = ({ index }) => {
       [lines],
     )
 
-    const handleChange = (index: number) => (e: any) => {
-        let newArr = [...lines]; // copying the old datas array
-        newArr[index].text = e.target.value; // replace e.target.value with whatever you want to change it to
-        setLines(newArr);
-    }
+    // const handleChange = (index: number) => (e: any) => {
+    //     let newArr = [...lines]; // copying the old datas array
+    //     newArr[index].text = e.target.value; // replace e.target.value with whatever you want to change it to
+    //     setLines(newArr);
+    // }
 
     const handleCharacterChange = (index: number) => (e: any) => {
       let newArr = [...lines]; // copying the old datas array
@@ -73,17 +86,18 @@ export const DayContainer: FC<ContainerProps> = ({ index }) => {
       setLines(newArr);
   }
 
-    const renderLine = (line: { id: number; text: string, character: string, selectedVariable: string}, index: number) => {
+    const renderLine = (line: { id: number; text: string, character: string, selectedVariable: string}, index: number, dayIndex: number) => {
       return (
         <Card
           key={line.id}
+          dayIndex={dayIndex}
           index={index}
           id={line.id}
           text={line.text}
           character={line.character}
           variable={line.selectedVariable}
           moveCard={moveCard}
-          handleChange={handleChange}
+          handleChange={handleChangeText}
           handleCharacterChange={handleCharacterChange}
           handleVariableChange={handleVariableChange}
           insertVariable={insertVariable}
@@ -99,9 +113,12 @@ export const DayContainer: FC<ContainerProps> = ({ index }) => {
                 padding: '10px'
             }}
             >
-        <h1> Day {index+1} </h1>
-        <Button variant="contained" onClick={() => setLines(oldArray => [...oldArray, {id:lines.length+1, text:"", character:"", selectedVariable:"", variables:[""]}])}>Add Line</Button>
-        <div>{lines.map((line, i) => renderLine(line, i))}</div>
+        <h1> Day {day.ix + 1}</h1>
+        <Button variant="contained" 
+        onClick={() => setLines(day.ix)}
+        >Add Line
+        </Button>
+        <div>{lines.map((line, i) => renderLine(line, i, day.ix))}</div>
       </Paper>
     )
   }
