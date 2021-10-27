@@ -10,18 +10,31 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TimePicker from './TimePicker'
 import Button from '@mui/material/Button';
+import QuestionSwitch from './QuestionSwitch'
+import QuestionFields from './QuestionFields';
 
 export interface CardProps {
   id: any
+  dayIndex: number
   text: string
   character: string
+  time: Date | null
+  yesAnswer: string 
+  noAnswer: string 
+  timeoutAnswer: string
   index: number
   variable: string
+  switchStatus: boolean
   moveCard: (dragIndex: number, hoverIndex: number) => void
   handleChange: any
   handleCharacterChange: any
   handleVariableChange: any
   insertVariable: any
+  handleChangeTime: any
+  toggleSwitch: any
+  handleChangeYesAnswer: any
+  handleChangeNoAnswer: any
+  handleChangeTimeoutAnswer: any
 }
 
 interface DragItem {
@@ -30,12 +43,10 @@ interface DragItem {
   type: string
 }
 
-export const Card: FC<CardProps> = ({ id, text, variable, character, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable }) => {
-    useEffect(() => {
-      }, []);
+export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, time, switchStatus, yesAnswer, noAnswer, timeoutAnswer, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable, handleChangeTime, toggleSwitch, handleChangeYesAnswer, handleChangeNoAnswer, handleChangeTimeoutAnswer }) => {
+  useEffect(() => {
+    }, []);
   
-  const [time, setTime] = useState<Date | null>(null);
-
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -90,7 +101,9 @@ export const Card: FC<CardProps> = ({ id, text, variable, character, index, move
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
+      console.log("Before reset index: ",item.index)
       item.index = hoverIndex
+      console.log("After reset index: ",item.index)
     },
   })
 
@@ -129,14 +142,14 @@ export const Card: FC<CardProps> = ({ id, text, variable, character, index, move
               id="demo-simple-select"
               value={character}
               label="Character"
-              onChange={handleCharacterChange(index)}
+              onChange={() => handleCharacterChange(dayIndex, index)}
               >
               <MenuItem value={"Benedick"}>Benedick</MenuItem>
               <MenuItem value={"Beatrice"}>Beatrice</MenuItem>
               <MenuItem value={"Hero"}>Hero</MenuItem>
               </Select>
           </FormControl>
-          <TimePicker time={time} setTime={setTime} />
+          <TimePicker time={time} setTime={handleChangeTime} dayIndex={dayIndex} lineIndex={index} />
           <FormControl sx={{width:'250px', textAlign:'center'}}>
               <InputLabel id="demo-simple-select-label">Select Variable</InputLabel>
               <Select
@@ -144,7 +157,7 @@ export const Card: FC<CardProps> = ({ id, text, variable, character, index, move
               id="demo-simple-select"
               value={variable}
               label="Variable"
-              onChange={handleVariableChange(index)}
+              onChange={handleVariableChange(dayIndex, index)}
               >
               <MenuItem value={"{{ Pet }}"}>Pet</MenuItem>
               <MenuItem value={"{{ Name }}"}>Name</MenuItem>
@@ -155,23 +168,40 @@ export const Card: FC<CardProps> = ({ id, text, variable, character, index, move
             disabled={variable === ""}
             variant="contained"
             color="secondary"
-            onClick={() => insertVariable(index)}
+            onClick={() => insertVariable(dayIndex, index)}
           >
             Add
           </Button>
 
         </div>
         <TextField
-        id="outlined-multiline-flexible"
-        multiline
-        fullWidth={true}
-        value={text}
-        onChange={handleChange(index)}
-        sx={{ 
-            backgroundColor: 'white', 
-            opacity 
-        }}
-    />
+          id="outlined-multiline-flexible"
+          multiline
+          fullWidth={true}
+          value={text}
+          onChange={handleChange(dayIndex, index)}
+          sx={{ 
+              backgroundColor: 'white', 
+              opacity 
+          }}
+        />
+        <QuestionSwitch checked={switchStatus} handleChange={toggleSwitch} dayIndex={dayIndex} lineIndex={index} />
+        {
+          switchStatus === true ? (
+            <QuestionFields 
+              dayIndex={dayIndex} 
+              lineIndex={index}
+              yesAnswer={yesAnswer}
+              noAnswer={noAnswer} 
+              timeoutAnswer={timeoutAnswer} 
+              handleChangeYesAnswer={handleChangeYesAnswer} 
+              handleChangeNoAnswer={handleChangeNoAnswer} 
+              handleChangeTimeoutAnswer={handleChangeTimeoutAnswer}
+              />
+          ) : (
+            null
+          )
+        }
         </Paper>
     </>
   )
