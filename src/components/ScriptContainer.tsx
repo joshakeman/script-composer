@@ -20,6 +20,10 @@ export interface Line {
     selectedVariable: string
     variables: Array<string>
     time: Date | null
+    switchStatus: boolean
+    yesAnswer: string
+    noAnswer: string
+    timeoutAnswer: string
   }
 export interface Day {
     ix: number
@@ -42,7 +46,11 @@ export default function ScriptContainer() {
                 character: "",
                 selectedVariable: "",
                 variables: [],
-                time: null
+                time: null,
+                switchStatus: false,
+                yesAnswer: "",
+                noAnswer: "",
+                timeoutAnswer: ""
             }
         ]
     }])
@@ -51,7 +59,18 @@ export default function ScriptContainer() {
     const addDay = () => {
         setDays(prevState => [...prevState,{
             ix: prevState.length,
-            lines: [{id: 1, text: "", character: "", selectedVariable: "", variables: [], time: null}]
+            lines: [{
+                id: 1, 
+                text: "", 
+                character: "", 
+                selectedVariable: "", 
+                variables: [], 
+                time: null, 
+                switchStatus: false,
+                yesAnswer: "",
+                noAnswer: "",
+                timeoutAnswer: ""
+            }]
         }])
     }
 
@@ -73,6 +92,33 @@ export default function ScriptContainer() {
         let newArr = [...days]; // copying the old datas array
         let updatedDay = {...newArr[dayIndex]}
         updatedDay.lines[index].text = e.target.value; // replace e.target.value with whatever you want to change it to
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const handleChangeYesAnswer = (dayIndex: number, index: number) => (e: any) => {
+        console.log(`Calling handle change text on day ${dayIndex}, line ${index}`)
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].yesAnswer = e.target.value; // replace e.target.value with whatever you want to change it to
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const handleChangeNoAnswer = (dayIndex: number, index: number) => (e: any) => {
+        console.log(`Calling handle change text on day ${dayIndex}, line ${index}`)
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].noAnswer = e.target.value; // replace e.target.value with whatever you want to change it to
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const handleChangeTimeoutAnswer = (dayIndex: number, index: number) => (e: any) => {
+        console.log(`Calling handle change text on day ${dayIndex}, line ${index}`)
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].timeoutAnswer = e.target.value; // replace e.target.value with whatever you want to change it to
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -113,7 +159,18 @@ export default function ScriptContainer() {
         console.log(newArr)
         let updatedDay = {...newArr[dayIndex]}
         console.log(updatedDay)
-        updatedDay.lines.push({id: updatedDay.lines.length+1, text: "", character: "", selectedVariable: "", variables: [], time: null})
+        updatedDay.lines.push({
+            id: updatedDay.lines.length+1, 
+            text: "", 
+            character: "", 
+            selectedVariable: "", 
+            variables: [], 
+            time: null, 
+            switchStatus: false,
+            yesAnswer: "",
+            noAnswer: "",
+            timeoutAnswer: ""
+        })
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -139,6 +196,14 @@ export default function ScriptContainer() {
         let newArr = [...days]; // copying the old datas array
         let updatedDay = {...newArr[dayIndex]}
         updatedDay.lines[index].time = time; // replace e.target.value with whatever you want to change it to
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const toggleSwitch = (dayIndex: number, index: number) => (e: any) => {
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].switchStatus = !updatedDay.lines[index].switchStatus; // replace e.target.value with whatever you want to change it to
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -171,6 +236,10 @@ export default function ScriptContainer() {
                     handleVariableChange={handleVariableChange}
                     insertVariable={insertVariable}
                     handleChangeTime={handleChangeTime}  
+                    toggleSwitch={toggleSwitch}
+                    handleChangeYesAnswer={handleChangeYesAnswer} 
+                    handleChangeNoAnswer={handleChangeNoAnswer}
+                    handleChangeTimeoutAnswer={handleChangeTimeoutAnswer}
                     />
                 ) : (
                     null

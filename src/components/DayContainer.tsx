@@ -12,6 +12,10 @@ export interface Line {
   selectedVariable: string
   variables: Array<string>
   time: Date | null
+  switchStatus: boolean
+  yesAnswer: string
+  noAnswer: string
+  timeoutAnswer: string
 }
 
 export interface ContainerState {
@@ -33,9 +37,14 @@ export interface ContainerProps {
   handleVariableChange: any
   insertVariable: any
   handleChangeTime: any 
+  toggleSwitch: any
+
+  handleChangeYesAnswer: any
+  handleChangeNoAnswer: any
+  handleChangeTimeoutAnswer: any
 }
 
-export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handleChangeText, handleCharacterChange, handleVariableChange, insertVariable, handleChangeTime }) => {
+export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handleChangeText, handleCharacterChange, handleVariableChange, insertVariable, handleChangeTime, toggleSwitch, handleChangeYesAnswer, handleChangeNoAnswer, handleChangeTimeoutAnswer }) => {
   {
     // const [lines, setLines] = useState([
     //   {
@@ -80,7 +89,7 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handl
   // }
     
 
-    const renderLine = (line: { id: number; text: string, character: string, time: Date | null, selectedVariable: string}, index: number, dayIndex: number) => {
+    const renderLine = (line: { id: number; text: string, character: string, time: Date | null, selectedVariable: string, switchStatus: boolean, yesAnswer: string, noAnswer: string, timeoutAnswer: string}, index: number, dayIndex: number) => {
       return (
         <Card
           key={line.id}
@@ -89,7 +98,11 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handl
           id={line.id}
           text={line.text}
           character={line.character}
+          switchStatus={line.switchStatus}
           time={line.time}
+          yesAnswer={line.yesAnswer}
+          noAnswer={line.noAnswer}
+          timeoutAnswer={line.timeoutAnswer}
           variable={line.selectedVariable}
           moveCard={moveCard}
           handleChange={handleChangeText}
@@ -97,6 +110,10 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handl
           handleVariableChange={handleVariableChange}
           insertVariable={insertVariable}
           handleChangeTime={handleChangeTime}
+          toggleSwitch={toggleSwitch}
+          handleChangeYesAnswer={handleChangeYesAnswer} 
+          handleChangeNoAnswer={handleChangeNoAnswer} 
+          handleChangeTimeoutAnswer={handleChangeTimeoutAnswer}
         />
       )
     }

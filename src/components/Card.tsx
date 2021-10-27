@@ -10,6 +10,8 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TimePicker from './TimePicker'
 import Button from '@mui/material/Button';
+import QuestionSwitch from './QuestionSwitch'
+import QuestionFields from './QuestionFields';
 
 export interface CardProps {
   id: any
@@ -17,14 +19,22 @@ export interface CardProps {
   text: string
   character: string
   time: Date | null
+  yesAnswer: string 
+  noAnswer: string 
+  timeoutAnswer: string
   index: number
   variable: string
+  switchStatus: boolean
   moveCard: (dragIndex: number, hoverIndex: number) => void
   handleChange: any
   handleCharacterChange: any
   handleVariableChange: any
   insertVariable: any
   handleChangeTime: any
+  toggleSwitch: any
+  handleChangeYesAnswer: any
+  handleChangeNoAnswer: any
+  handleChangeTimeoutAnswer: any
 }
 
 interface DragItem {
@@ -33,7 +43,7 @@ interface DragItem {
   type: string
 }
 
-export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, time, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable, handleChangeTime }) => {
+export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, time, switchStatus, yesAnswer, noAnswer, timeoutAnswer, index, moveCard, handleChange, handleCharacterChange, handleVariableChange, insertVariable, handleChangeTime, toggleSwitch, handleChangeYesAnswer, handleChangeNoAnswer, handleChangeTimeoutAnswer }) => {
   useEffect(() => {
     }, []);
   
@@ -175,6 +185,23 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
               opacity 
           }}
         />
+        <QuestionSwitch checked={switchStatus} handleChange={toggleSwitch} dayIndex={dayIndex} lineIndex={index} />
+        {
+          switchStatus === true ? (
+            <QuestionFields 
+              dayIndex={dayIndex} 
+              lineIndex={index}
+              yesAnswer={yesAnswer}
+              noAnswer={noAnswer} 
+              timeoutAnswer={timeoutAnswer} 
+              handleChangeYesAnswer={handleChangeYesAnswer} 
+              handleChangeNoAnswer={handleChangeNoAnswer} 
+              handleChangeTimeoutAnswer={handleChangeTimeoutAnswer}
+              />
+          ) : (
+            null
+          )
+        }
         </Paper>
     </>
   )
