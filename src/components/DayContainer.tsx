@@ -11,6 +11,7 @@ export interface Line {
   character: string
   selectedVariable: string
   variables: Array<string>
+  time: Date | null
 }
 
 export interface ContainerState {
@@ -29,9 +30,12 @@ export interface ContainerProps {
   addLine: any
   handleChangeText: any
   handleCharacterChange: any
+  handleVariableChange: any
+  insertVariable: any
+  handleChangeTime: any 
 }
 
-export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handleChangeText, handleCharacterChange }) => {
+export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handleChangeText, handleCharacterChange, handleVariableChange, insertVariable, handleChangeTime }) => {
   {
     // const [lines, setLines] = useState([
     //   {
@@ -74,21 +78,9 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handl
   //     newArr[index].character = e.target.value; // replace e.target.value with whatever you want to change it to
   //     setLines(newArr);
   // }
-    const handleVariableChange = (index: number) => (e: any) => {
-      let newArr = [...lines]; // copying the old datas array
-      newArr[index].selectedVariable = e.target.value; // replace e.target.value with whatever you want to change it to
-      setLines(newArr);
-  }
+    
 
-  const insertVariable = (index: number) => {
-    let newArr = [...lines]; // copying the old datas array
-      newArr[index].variables = [...newArr[index].variables, newArr[index].selectedVariable]; // replace e.target.value with whatever you want to change it to
-      newArr[index].text += newArr[index].selectedVariable
-      newArr[index].selectedVariable = ""
-      setLines(newArr);
-  }
-
-    const renderLine = (line: { id: number; text: string, character: string, selectedVariable: string}, index: number, dayIndex: number) => {
+    const renderLine = (line: { id: number; text: string, character: string, time: Date | null, selectedVariable: string}, index: number, dayIndex: number) => {
       return (
         <Card
           key={line.id}
@@ -97,12 +89,14 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handl
           id={line.id}
           text={line.text}
           character={line.character}
+          time={line.time}
           variable={line.selectedVariable}
           moveCard={moveCard}
           handleChange={handleChangeText}
           handleCharacterChange={handleCharacterChange}
           handleVariableChange={handleVariableChange}
           insertVariable={insertVariable}
+          handleChangeTime={handleChangeTime}
         />
       )
     }

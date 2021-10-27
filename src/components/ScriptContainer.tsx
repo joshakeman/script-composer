@@ -19,6 +19,7 @@ export interface Line {
     character: string
     selectedVariable: string
     variables: Array<string>
+    time: Date | null
   }
 export interface Day {
     ix: number
@@ -40,7 +41,8 @@ export default function ScriptContainer() {
                 text: "",
                 character: "",
                 selectedVariable: "",
-                variables: []
+                variables: [],
+                time: null
             }
         ]
     }])
@@ -49,7 +51,7 @@ export default function ScriptContainer() {
     const addDay = () => {
         setDays(prevState => [...prevState,{
             ix: prevState.length,
-            lines: [{id: 1, text: "", character: "", selectedVariable: "", variables: []}]
+            lines: [{id: 1, text: "", character: "", selectedVariable: "", variables: [], time: null}]
         }])
     }
 
@@ -67,6 +69,7 @@ export default function ScriptContainer() {
     // }
 
     const handleChangeText = (dayIndex: number, index: number) => (e: any) => {
+        console.log(`Calling handle change text on day ${dayIndex}, line ${index}`)
         let newArr = [...days]; // copying the old datas array
         let updatedDay = {...newArr[dayIndex]}
         updatedDay.lines[index].text = e.target.value; // replace e.target.value with whatever you want to change it to
@@ -82,13 +85,35 @@ export default function ScriptContainer() {
         setDays(newArr);
     }
 
+    const handleVariableChange = (dayIndex: number, index: number) => (e: any) => {
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].selectedVariable = e.target.value // replace e.target.value with whatever you want to change it to
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+  
+    const insertVariable = (dayIndex: number, index: number) => {
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+
+        let newLineArr = [...updatedDay.lines]; // copying the old datas array
+        newLineArr[index].variables = [...newLineArr[index].variables, newLineArr[index].selectedVariable]; // replace e.target.value with whatever you want to change it to
+        newLineArr[index].text += newLineArr[index].selectedVariable
+        newLineArr[index].selectedVariable = ""
+
+        updatedDay.lines = newLineArr
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
     const addLine = (dayIndex: number) => {
         console.log("day index is: ", dayIndex)
         let newArr = [...days]; // copying the old datas array
         console.log(newArr)
         let updatedDay = {...newArr[dayIndex]}
         console.log(updatedDay)
-        updatedDay.lines.push({id: updatedDay.lines.length+1, text: "", character: "", selectedVariable: "", variables: []})
+        updatedDay.lines.push({id: updatedDay.lines.length+1, text: "", character: "", selectedVariable: "", variables: [], time: null})
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -105,6 +130,15 @@ export default function ScriptContainer() {
         console.log(updatedDay)
         updatedDay.lines = newLines
         console.log(updatedDay)
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const handleChangeTime = (dayIndex: number, index: number, time: Date | null) => {
+        console.log("Calling handle change time")
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].time = time; // replace e.target.value with whatever you want to change it to
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -133,7 +167,10 @@ export default function ScriptContainer() {
                     addLine={addLine} 
                     setLines={rearrangeLines} 
                     handleChangeText={handleChangeText} 
-                    handleCharacterChange={handleCharacterChange} 
+                    handleCharacterChange={handleCharacterChange}
+                    handleVariableChange={handleVariableChange}
+                    insertVariable={insertVariable}
+                    handleChangeTime={handleChangeTime}  
                     />
                 ) : (
                     null
