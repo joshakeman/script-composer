@@ -142,7 +142,7 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
               id="demo-simple-select"
               value={character}
               label="Character"
-              onChange={() => handleCharacterChange(dayIndex, index)}
+              onChange={handleCharacterChange(dayIndex, index)}
               >
               <MenuItem value={"Benedick"}>Benedick</MenuItem>
               <MenuItem value={"Beatrice"}>Beatrice</MenuItem>
