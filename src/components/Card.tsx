@@ -91,7 +91,9 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, i
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
+      console.log("Before reset index: ",item.index)
       item.index = hoverIndex
+      console.log("After reset index: ",item.index)
     },
   })
 
@@ -130,7 +132,7 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, i
               id="demo-simple-select"
               value={character}
               label="Character"
-              onChange={handleCharacterChange(index)}
+              onChange={handleCharacterChange(dayIndex, index)}
               >
               <MenuItem value={"Benedick"}>Benedick</MenuItem>
               <MenuItem value={"Beatrice"}>Beatrice</MenuItem>

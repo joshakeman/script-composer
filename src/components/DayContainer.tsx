@@ -26,10 +26,12 @@ export interface ContainerProps {
   // index: number
   day: Day
   setLines: any
+  addLine: any
   handleChangeText: any
+  handleCharacterChange: any
 }
 
-export const DayContainer: FC<ContainerProps> = ({ day, setLines, handleChangeText }) => {
+export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handleChangeText, handleCharacterChange }) => {
   {
     // const [lines, setLines] = useState([
     //   {
@@ -49,7 +51,7 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, handleChangeTe
     const moveCard = useCallback(
       (dragIndex: number, hoverIndex: number) => {
         const dragCard = lines[dragIndex]
-        setLines(
+        setLines(day.ix,
           update(lines, {
             $splice: [
               [dragIndex, 1],
@@ -67,11 +69,11 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, handleChangeTe
     //     setLines(newArr);
     // }
 
-    const handleCharacterChange = (index: number) => (e: any) => {
-      let newArr = [...lines]; // copying the old datas array
-      newArr[index].character = e.target.value; // replace e.target.value with whatever you want to change it to
-      setLines(newArr);
-  }
+  //   const handleCharacterChange = (index: number) => (e: any) => {
+  //     let newArr = [...lines]; // copying the old datas array
+  //     newArr[index].character = e.target.value; // replace e.target.value with whatever you want to change it to
+  //     setLines(newArr);
+  // }
     const handleVariableChange = (index: number) => (e: any) => {
       let newArr = [...lines]; // copying the old datas array
       newArr[index].selectedVariable = e.target.value; // replace e.target.value with whatever you want to change it to
@@ -115,7 +117,7 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, handleChangeTe
             >
         <h1> Day {day.ix + 1}</h1>
         <Button variant="contained" 
-        onClick={() => setLines(day.ix)}
+        onClick={() => addLine(day.ix)}
         >Add Line
         </Button>
         <div>{lines.map((line, i) => renderLine(line, i, day.ix))}</div>

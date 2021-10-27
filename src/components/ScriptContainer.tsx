@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useEffect} from 'react'
 import TextBox from './TextBox'
 import Button from '@mui/material/Button';
 // import { Line } from './Constants'
@@ -26,7 +26,24 @@ export interface Day {
 }
 
 export default function ScriptContainer() {
-    const [days, setDays] = useState<ScriptState["days"]>([])
+    useEffect(()=> {
+        if (days.length === 1 && days[0].lines.length === 1) {
+            handleTabChange({} as React.SyntheticEvent, 1)
+        }
+    },[])
+
+    const [days, setDays] = useState<ScriptState["days"]>([{
+        ix: 0,
+        lines: [
+            {
+                id: 1,
+                text: "",
+                character: "",
+                selectedVariable: "",
+                variables: []
+            }
+        ]
+    }])
     const [selectedDay, setSelectedDay] = useState<ScriptState["selectedDay"]>({} as Day)
 
     const addDay = () => {
@@ -38,7 +55,7 @@ export default function ScriptContainer() {
 
     const [value, setValue] = React.useState(1);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
       setSelectedDay(days[newValue-1])
     };
@@ -57,11 +74,37 @@ export default function ScriptContainer() {
         setDays(newArr);
     }
 
-    const setLines = (dayIndex: number) => {
-        console.log("day index is: ", dayIndex)
+    const handleCharacterChange = (dayIndex: number, index: number) => (e: any) => {
         let newArr = [...days]; // copying the old datas array
         let updatedDay = {...newArr[dayIndex]}
+        updatedDay.lines[index].character = e.target.value; // replace e.target.value with whatever you want to change it to
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const addLine = (dayIndex: number) => {
+        console.log("day index is: ", dayIndex)
+        let newArr = [...days]; // copying the old datas array
+        console.log(newArr)
+        let updatedDay = {...newArr[dayIndex]}
+        console.log(updatedDay)
         updatedDay.lines.push({id: updatedDay.lines.length+1, text: "", character: "", selectedVariable: "", variables: []})
+        newArr[dayIndex] = updatedDay
+        setDays(newArr);
+    }
+
+    const rearrangeLines = (dayIndex: number, newLines: Line[]) => {
+        console.log("running rearrange lines on day: ", dayIndex)
+        setSelectedDay({
+            ...selectedDay,
+            lines: newLines
+        })
+
+        let newArr = [...days]; // copying the old datas array
+        let updatedDay = {...newArr[dayIndex]}
+        console.log(updatedDay)
+        updatedDay.lines = newLines
+        console.log(updatedDay)
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -71,7 +114,7 @@ export default function ScriptContainer() {
                 <Button variant="contained" onClick={addDay}>Add Day</Button>
                 <Tabs
                     value={value}
-                    onChange={handleChange}
+                    onChange={handleTabChange}
                     textColor="secondary"
                     indicatorColor="secondary"
                     aria-label="secondary tabs example"
@@ -85,7 +128,13 @@ export default function ScriptContainer() {
                 </Tabs>
                 {/* {days.map((day, index) => <DayContainer index={index}/>)} */}
                 {selectedDay.ix !== undefined ? (
-                    <DayContainer day={selectedDay} setLines={setLines} handleChangeText={handleChangeText} />
+                    <DayContainer 
+                    day={selectedDay} 
+                    addLine={addLine} 
+                    setLines={rearrangeLines} 
+                    handleChangeText={handleChangeText} 
+                    handleCharacterChange={handleCharacterChange} 
+                    />
                 ) : (
                     null
                 )}
