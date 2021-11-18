@@ -3,7 +3,21 @@ import { createSlice } from '@reduxjs/toolkit';
 export const slice = createSlice({
   name: 'script',
   initialState: {
-    days: [],
+    days: [{
+        ix: 0,
+        lines: [{
+            id: 1, 
+            text: "", 
+            character: "", 
+            selectedVariable: "", 
+            variables: [], 
+            time: null, 
+            switchStatus: false,
+            yesAnswer: "",
+            noAnswer: "",
+            timeoutAnswer: ""
+        }]
+    }],
   },
   reducers: {
     addNewDay: state => {
@@ -23,14 +37,20 @@ export const slice = createSlice({
                 }]
             })
         },
-    updateChar: (state, action) => {
-        let newState = state
-        let thisOne = state.list.find(c => c?.id === action.payload.id);
-        thisOne?.name !== undefined ? thisOne.name = action.payload.name : console.log();
-        let restOf = state.list.filter(c => c?.id !== action.payload.id);
-        let newArray = [...restOf, thisOne].sort( compare );
-        newState.characters = newArray
-        state = newState
+    handleChangeLineText: (state, action) => {
+        state.days[action.payload.dayIx].lines[action.payload.lineIx].text = action.payload.textVal
+
+        // let thisDay = state.days.find(c => c?.ix === action.payload.dayIx);
+        // let restOfDays = state.days.filter(c => c?.ix !== action.payload.dayIx);
+
+        // console.log(thisDay)
+        // let thisLine = thisDay.lines.find(l => l.id === action.payload.lineId)
+        // let otherLines = thisDay.lines.filter(l => l.id !== action.payload.lineId) 
+
+        // thisDay.lines = [...otherLines, thisLine]
+
+        // let newArray = [...restOfDays, thisDay].sort( compareDays );
+        // state.days = newArray
     },
     incrementByAmount: (state, action) => {
         state.value += action.payload;
@@ -43,7 +63,7 @@ export const slice = createSlice({
   },
 });
 
-export const { addNewDay } = slice.actions;
+export const { addNewDay, handleChangeLineText } = slice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
@@ -67,6 +87,16 @@ function compare( a, b ) {
       return -1;
     }
     if ( a.id > b.id ){
+      return 1;
+    }
+    return 0;
+  }
+
+function compareDays( a, b ) {
+    if ( a.ix < b.ix ){
+      return -1;
+    }
+    if ( a.ix > b.ix ){
       return 1;
     }
     return 0;
