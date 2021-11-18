@@ -4,9 +4,11 @@ import Button from '@mui/material/Button';
 import { FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
-import CharacterLine from './ConfigComponents/CharacterLine'
+import CharacterEntry from './ConfigComponents/CharacterEntry'
+import VariableEntry from './ConfigComponents/VariableEntry';
 
-import { update, selectCharList, addNew } from '../redux/reducers/characters'
+import { updateChar, selectCharList, addNew } from '../redux/reducers/characters'
+import { updateVar, selectVarList, addNewVar } from '../redux/reducers/variables'
 
 interface ConfigState {
     characters: Array<Character | undefined>
@@ -27,23 +29,36 @@ const paperStyle = {
 
 export default function Configuration() {
     const charList = useSelector(selectCharList);
+    const varList = useSelector(selectVarList);
     const dispatch = useDispatch();
 
-    const [state, setState] = useState({characters:[], vars:[]} as ConfigState)
-    const [char, setChar] = useState("")
+    const [char, setChar] = useState("");
+    const [vari, setVari] = useState("");
 
     const handleChangeChar = (e: any) => {
         setChar(e.target.value)
     }
 
+    const handleChangeVar = (e: any) => {
+        setVari(e.target.value)
+    }
+
     const createChar = () => {
         dispatch(addNew(char))
-        console.log(charList)
         setChar("")
     }
 
+    const createVar = () => {
+        dispatch(addNewVar(vari))
+        setVari("")
+    }
+
     const editChar = (id: number, value: string) => {
-        dispatch(update({id, name:value}))
+        dispatch(updateChar({id, name:value}))
+    }
+
+    const editVar = (id: number, value: string) => {
+        dispatch(updateVar({id, name:value}))
     }
 
     return (
@@ -66,15 +81,29 @@ export default function Configuration() {
             </div>
             {
                 charList.map((char: any) =>
-                    <CharacterLine key={char !== undefined ? char.id : 0} id={char !== undefined ? char.id : 0} name={char !== undefined ? char.name : ""} editChar={editChar} />
+                    <CharacterEntry key={char !== undefined ? char.id : 0} id={char !== undefined ? char.id : 0} name={char !== undefined ? char.name : ""} editChar={editChar} />
                 )
             }
         </Paper>
         <Paper sx={paperStyle} elevation={3}>
             <h2>Variables</h2>
+            <div style={{display:'flex', alignItems:'center'}}>
+                <TextField
+                    name="char_input"
+                    label="Add Variable" 
+                    variant="standard"
+                    value={vari}
+                    onChange={handleChangeVar}
+                    />
+                <Button
+                    onClick={createVar}
+                >
+                    Add
+                </Button>
+            </div>
             {
-                state.vars.map(v => 
-                    <p>{v}</p>
+                varList.map((v: any) => 
+                    <VariableEntry key={v !== undefined ? v.id : 0} id={v !== undefined ? v.id : 0} name={v !== undefined ? v.name : ""} editVar={editVar} />
                 )
             }
         </Paper>

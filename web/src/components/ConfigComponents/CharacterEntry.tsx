@@ -9,7 +9,7 @@ interface IProps {
     editChar: any
 }
 
-export default function CharacterLine({ id, name, editChar }: IProps) {
+export default function CharacterEntry({ id, name, editChar }: IProps) {
     useEffect(()=>{
         console.log(`Use effect firing with new name ${name}`)
     },[name])
