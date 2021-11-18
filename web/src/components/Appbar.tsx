@@ -21,10 +21,9 @@ export default function Appbar() {
         <Toolbar>
             <Stack sx={{ width : '100%' }} direction="row" justifyContent="space-between" alignItems="center" className="nav-links">
                 <div>
-                    <Link to="/" style={linkStyle}>Configure</Link>
+                    <Link to="/" style={linkStyle}>Settings</Link>
                     <Link to="/builder" style={linkStyle}>Builder</Link>
                 </div>
-                <Button variant="contained" color="secondary" >Save</Button>
             </Stack>
         </Toolbar>
       </AppBar>

@@ -134,7 +134,7 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
     sx={{padding:'12px',
         backgroundColor:'#f5f5f5',
         cursor: 'move',
-        marginBottom: '10px',
+        margin: '10px 0',
         width: '90%',
         opacity
     }}

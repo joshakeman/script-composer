@@ -7,6 +7,9 @@ import { DayContainer } from './DayContainer'
 import Paper from '@mui/material/Paper';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Stack from '@mui/material/Stack';
+import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
 
 interface ScriptState {
     days: Array<Day>
@@ -209,6 +212,17 @@ export default function ScriptContainer() {
     }
 
     return (
+        <>
+            <div style={{display:'flex', flexDirection:'column'}}>
+                <Stack sx={{width: '100%' }}>
+                    <Divider />
+                        <Toolbar sx={{width: '90%', display: 'flex', justifyContent: 'space-between' }} >
+                            <h1>Script Builder</h1>
+                            <Button variant="contained" color="secondary" >Save</Button>
+                        </Toolbar>
+                    <Divider />
+                </Stack>
+            </div>
             <div style={{overflowX: 'scroll', margin: '10px 0'}}>
                 <Button variant="contained" onClick={addDay}>Add Day</Button>
                 <Tabs
@@ -245,5 +259,6 @@ export default function ScriptContainer() {
                     null
                 )}
             </div>
+        </>
     )
 }

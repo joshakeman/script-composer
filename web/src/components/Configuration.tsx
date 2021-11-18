@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import Button from '@mui/material/Button';
-import { FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
 import CharacterEntry from './ConfigComponents/CharacterEntry'
 import VariableEntry from './ConfigComponents/VariableEntry';
 
 import { updateChar, selectCharList, addNew } from '../redux/reducers/characters'
 import { updateVar, selectVarList, addNewVar } from '../redux/reducers/variables'
+import Stack from '@mui/material/Stack';
 
 interface ConfigState {
     characters: Array<Character | undefined>
@@ -62,51 +64,63 @@ export default function Configuration() {
     }
 
     return (
-        <div style={{display:'flex'}}>
-        <Paper sx={paperStyle} elevation={3}>
-            <h2>Characters</h2>
-            <div style={{display:'flex', alignItems:'center'}}>
-                <TextField
-                    name="char_input"
-                    label="Add Name" 
-                    variant="standard"
-                    value={char}
-                    onChange={handleChangeChar}
-                    />
-                <Button
-                    onClick={createChar}
-                >
-                    Add
-                </Button>
+        <div>
+            <div style={{display:'flex', flexDirection:'column'}}>
+                <Stack sx={{width: '100%' }}>
+                    <Divider />
+                        <Toolbar sx={{width: '90%', display: 'flex', justifyContent: 'space-between' }} >
+                            <h1> Play Settings</h1>
+                            <Button variant="contained" color="secondary" >Save</Button>
+                        </Toolbar>
+                    <Divider />
+                </Stack>
             </div>
-            {
-                charList.map((char: any) =>
-                    <CharacterEntry key={char !== undefined ? char.id : 0} id={char !== undefined ? char.id : 0} name={char !== undefined ? char.name : ""} editChar={editChar} />
-                )
-            }
-        </Paper>
-        <Paper sx={paperStyle} elevation={3}>
-            <h2>Variables</h2>
-            <div style={{display:'flex', alignItems:'center'}}>
-                <TextField
-                    name="char_input"
-                    label="Add Variable" 
-                    variant="standard"
-                    value={vari}
-                    onChange={handleChangeVar}
-                    />
-                <Button
-                    onClick={createVar}
-                >
-                    Add
-                </Button>
-            </div>
-            {
-                varList.map((v: any) => 
-                    <VariableEntry key={v !== undefined ? v.id : 0} id={v !== undefined ? v.id : 0} name={v !== undefined ? v.name : ""} editVar={editVar} />
-                )
-            }
-        </Paper>
+            <Stack direction="row">
+                <Paper sx={paperStyle} elevation={3}>
+                    <h2>Characters</h2>
+                    <div style={{display:'flex', alignItems:'center'}}>
+                        <TextField
+                            name="char_input"
+                            label="Add Name" 
+                            variant="standard"
+                            value={char}
+                            onChange={handleChangeChar}
+                            />
+                        <Button
+                            onClick={createChar}
+                        >
+                            Add
+                        </Button>
+                    </div>
+                    {
+                        charList.map((char: any) =>
+                            <CharacterEntry key={char !== undefined ? char.id : 0} id={char !== undefined ? char.id : 0} name={char !== undefined ? char.name : ""} editChar={editChar} />
+                        )
+                    }
+                </Paper>
+                <Paper sx={paperStyle} elevation={3}>
+                    <h2>Variables</h2>
+                    <div style={{display:'flex', alignItems:'center'}}>
+                        <TextField
+                            name="char_input"
+                            label="Add Variable" 
+                            variant="standard"
+                            value={vari}
+                            onChange={handleChangeVar}
+                            />
+                        <Button
+                            onClick={createVar}
+                        >
+                            Add
+                        </Button>
+                    </div>
+                    {
+                        varList.map((v: any) => 
+                            <VariableEntry key={v !== undefined ? v.id : 0} id={v !== undefined ? v.id : 0} name={v !== undefined ? v.name : ""} editVar={editVar} />
+                        )
+                    }
+                </Paper>
+            </Stack>
         </div>
     )
 }
