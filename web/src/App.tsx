@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import ScriptContainer from './components/ScriptContainer'
 import Configuration from './components/Configuration'
@@ -9,10 +9,16 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 function App() {
   return (
     <div className="App">
-        <Configuration />
-        <DndProvider backend={HTML5Backend}>
-          <ScriptContainer />
-        </DndProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Configuration />} />
+          <Route path="/builder" element={
+            <DndProvider backend={HTML5Backend}>
+              <ScriptContainer />
+            </DndProvider>
+          } />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
