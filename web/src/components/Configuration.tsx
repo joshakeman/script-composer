@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import Button from '@mui/material/Button';
 import { FormControl } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import CharacterLine from './ConfigComponents/CharacterLine'
+
+import { update, selectCharList, addNew } from '../redux/reducers/characters'
 
 interface ConfigState {
     characters: Array<Character | undefined>
@@ -23,6 +26,9 @@ const paperStyle = {
 }
 
 export default function Configuration() {
+    const charList = useSelector(selectCharList);
+    const dispatch = useDispatch();
+
     const [state, setState] = useState({characters:[], vars:[]} as ConfigState)
     const [char, setChar] = useState("")
     const [toggle, setToggle] = useState(false)
@@ -32,25 +38,13 @@ export default function Configuration() {
     }
 
     const createChar = () => {
-        let newState = state
-        newState.characters = [...state.characters, {id: state.characters.length, name:char, mug:''}]
+        dispatch(addNew(char))
+        console.log(charList)
         setChar("")
-        setState(newState)
     }
 
     const editChar = (id: number, value: string) => {
-        let newState = state
-        let thisOne = state.characters.find(c => c?.id === id);
-        console.log(thisOne)
-        thisOne?.name !== undefined ? thisOne.name = value : console.log();
-        let restOf = state.characters.filter(c => c?.id !== id);
-        console.log(restOf)
-        let newArray = [...restOf, thisOne].sort( compare );
-        console.log(newArray)
-        newState.characters = newArray
-        console.log(newState)
-        setState(newState)
-        setToggle(!toggle)
+        dispatch(update({id, name:value}))
     }
 
     function compare( a: any , b: any ) {
@@ -82,7 +76,7 @@ export default function Configuration() {
                 </Button>
             </div>
             {
-                state.characters.map((char) =>
+                charList.map((char: any) =>
                     <CharacterLine key={char !== undefined ? char.id : 0} id={char !== undefined ? char.id : 0} name={char !== undefined ? char.name : ""} editChar={editChar} />
                 )
             }
