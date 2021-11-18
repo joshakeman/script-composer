@@ -145,7 +145,7 @@ export default function ScriptContainer() {
 
         let newLineArr = [...updatedDay.lines]; // copying the old datas array
         newLineArr[index].variables = [...newLineArr[index].variables, newLineArr[index].selectedVariable]; // replace e.target.value with whatever you want to change it to
-        newLineArr[index].text += newLineArr[index].selectedVariable
+        newLineArr[index].text += `{{ ${newLineArr[index].selectedVariable} }}`
         newLineArr[index].selectedVariable = ""
 
         updatedDay.lines = newLineArr
@@ -209,7 +209,7 @@ export default function ScriptContainer() {
     }
 
     return (
-            <div style={{overflowX: 'scroll'}}>
+            <div style={{overflowX: 'scroll', margin: '10px 0'}}>
                 <Button variant="contained" onClick={addDay}>Add Day</Button>
                 <Tabs
                     value={value}
