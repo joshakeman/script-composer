@@ -211,6 +211,10 @@ export default function ScriptContainer() {
         setDays(newArr);
     }
 
+    const uploadScript = () => {
+        console.log(days)
+    }
+
     return (
         <>
             <div style={{display:'flex', flexDirection:'column'}}>
@@ -220,7 +224,7 @@ export default function ScriptContainer() {
                             <h1>Script Builder</h1>
                             <div>
                                 <Button sx={{marginRight: '10px'}} variant="contained" color="success" >Save</Button>
-                                <Button variant="contained" color="secondary" >Upload</Button>
+                                <Button variant="contained" color="secondary" onClick={uploadScript} >Upload</Button>
                             </div>
                         </Toolbar>
                     <Divider />
