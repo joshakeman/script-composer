@@ -16,9 +16,7 @@ export const slice = createSlice({
         let restOf = state.list.filter(c => c?.id !== action.payload.id);
         let newArray = [...restOf, thisOne].sort( compare );
         newState.characters = newArray
-        console.log(newArray)  
         state = newState
-        console.log(state)
     },
     incrementByAmount: (state, action) => {
         state.value += action.payload;

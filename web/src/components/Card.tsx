@@ -13,6 +13,9 @@ import Button from '@mui/material/Button';
 import QuestionSwitch from './QuestionSwitch'
 import QuestionFields from './QuestionFields';
 
+import { useSelector } from 'react-redux';
+import { selectCharList } from '../redux/reducers/characters'
+
 export interface CardProps {
   id: any
   dayIndex: number
@@ -47,6 +50,8 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
   useEffect(() => {
     }, []);
   
+  const charList = useSelector(selectCharList);
+
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -144,9 +149,9 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
               label="Character"
               onChange={handleCharacterChange(dayIndex, index)}
               >
-              <MenuItem value={"Benedick"}>Benedick</MenuItem>
-              <MenuItem value={"Beatrice"}>Beatrice</MenuItem>
-              <MenuItem value={"Hero"}>Hero</MenuItem>
+                {
+                  charList.map((char: any) => <MenuItem value={char.name}>{char.name}</MenuItem>)
+                }
               </Select>
           </FormControl>
           <TimePicker time={time} setTime={handleChangeTime} dayIndex={dayIndex} lineIndex={index} />

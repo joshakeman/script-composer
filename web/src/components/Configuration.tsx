@@ -21,7 +21,7 @@ type Character = {
 
 const paperStyle = {
     padding:'20px', 
-    margin:'20px', 
+    margin:'10px', 
     width: '300px'
 }
 
@@ -31,7 +31,6 @@ export default function Configuration() {
 
     const [state, setState] = useState({characters:[], vars:[]} as ConfigState)
     const [char, setChar] = useState("")
-    const [toggle, setToggle] = useState(false)
 
     const handleChangeChar = (e: any) => {
         setChar(e.target.value)
@@ -47,19 +46,9 @@ export default function Configuration() {
         dispatch(update({id, name:value}))
     }
 
-    function compare( a: any , b: any ) {
-        if ( a.id < b.id ){
-          return -1;
-        }
-        if ( a.id > b.id ){
-          return 1;
-        }
-        return 0;
-      }
-
     return (
         <div style={{display:'flex'}}>
-        <Paper sx={paperStyle}>
+        <Paper sx={paperStyle} elevation={3}>
             <h2>Characters</h2>
             <div style={{display:'flex', alignItems:'center'}}>
                 <TextField
@@ -81,7 +70,7 @@ export default function Configuration() {
                 )
             }
         </Paper>
-        <Paper sx={paperStyle}>
+        <Paper sx={paperStyle} elevation={3}>
             <h2>Variables</h2>
             {
                 state.vars.map(v => 
