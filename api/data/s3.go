@@ -1,4 +1,4 @@
-package main
+package data
 
 import (
 	"encoding/json"
@@ -9,11 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
-
-func main() {
-	api := NewRestAPI(8080)
-	api.Run()
-}
 
 type restAPI struct {
 	Port int
