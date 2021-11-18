@@ -24,7 +24,7 @@ type Character = {
 const paperStyle = {
     padding:'20px', 
     margin:'10px', 
-    width: '300px'
+    width: '360px'
 }
 
 export default function Configuration() {
