@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import TextBox from './TextBox'
 import Button from '@mui/material/Button';
 // import { Line } from './Constants'
@@ -10,6 +11,8 @@ import Tab from '@mui/material/Tab';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
+
+import { addDay, selectDayList } from '../redux/reducers/script'
 
 interface ScriptState {
     days: Array<Day>
@@ -38,7 +41,9 @@ export default function ScriptContainer() {
         if (days.length === 1 && days[0].lines.length === 1) {
             handleTabChange({} as React.SyntheticEvent, 1)
         }
-    },[])
+    },[])   
+
+    const dayList = useSelector(selectDayList);
 
     const [days, setDays] = useState<ScriptState["days"]>([{
         ix: 0,
@@ -236,7 +241,7 @@ export default function ScriptContainer() {
                     }}
                 >
                     {
-                        days.map((day, index) => <Tab value={index+1} label={index+1} />)
+                        dayList.map((day: any, index: any) => <Tab value={index+1} label={index+1} />)
                     }
                 </Tabs>
                 {/* {days.map((day, index) => <DayContainer index={index}/>)} */}
