@@ -13,6 +13,10 @@ import Button from '@mui/material/Button';
 import QuestionSwitch from './QuestionSwitch'
 import QuestionFields from './QuestionFields';
 
+import { useSelector } from 'react-redux';
+import { selectCharList } from '../redux/reducers/characters'
+import { selectVarList } from '../redux/reducers/variables'
+
 export interface CardProps {
   id: any
   dayIndex: number
@@ -47,6 +51,9 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
   useEffect(() => {
     }, []);
   
+  const charList = useSelector(selectCharList);
+  const varList = useSelector(selectVarList);
+
   const ref = useRef<HTMLDivElement>(null)
   const [{ handlerId }, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -127,7 +134,7 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
     sx={{padding:'12px',
         backgroundColor:'#f5f5f5',
         cursor: 'move',
-        marginBottom: '10px',
+        margin: '10px 0',
         width: '90%',
         opacity
     }}
@@ -135,21 +142,20 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
     >
         <div style={{textAlign:'left'}}>Line {index+1}</div>
         <div className="toolbar">
-          <FormControl sx={{width:'250px', textAlign:'center'}}>
+          <FormControl sx={{width:'250px', textAlign:'center', marginRight: '10px'}}>
               <InputLabel id="demo-simple-select-label">Character</InputLabel>
               <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={character}
               label="Character"
-              onChange={() => handleCharacterChange(dayIndex, index)}
+              onChange={handleCharacterChange(dayIndex, index)}
               >
-              <MenuItem value={"Benedick"}>Benedick</MenuItem>
-              <MenuItem value={"Beatrice"}>Beatrice</MenuItem>
-              <MenuItem value={"Hero"}>Hero</MenuItem>
+                {
+                  charList.map((char: any) => <MenuItem value={char.name}>{char.name}</MenuItem>)
+                }
               </Select>
           </FormControl>
-          <TimePicker time={time} setTime={handleChangeTime} dayIndex={dayIndex} lineIndex={index} />
           <FormControl sx={{width:'250px', textAlign:'center'}}>
               <InputLabel id="demo-simple-select-label">Select Variable</InputLabel>
               <Select
@@ -159,12 +165,13 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
               label="Variable"
               onChange={handleVariableChange(dayIndex, index)}
               >
-              <MenuItem value={"{{ Pet }}"}>Pet</MenuItem>
-              <MenuItem value={"{{ Name }}"}>Name</MenuItem>
-              <MenuItem value={"{{ City }}"}>City</MenuItem>
+                {
+                  varList.map((vari: any) => <MenuItem value={vari.name}>{vari.name}</MenuItem>)
+                }
               </Select>
           </FormControl>
           <Button
+            sx={{ margin: '0 10px 0 5px' }}
             disabled={variable === ""}
             variant="contained"
             color="secondary"
@@ -172,7 +179,7 @@ export const Card: FC<CardProps> = ({ id, dayIndex, text, variable, character, t
           >
             Add
           </Button>
-
+          <TimePicker time={time} setTime={handleChangeTime} dayIndex={dayIndex} lineIndex={index} />
         </div>
         <TextField
           id="outlined-multiline-flexible"

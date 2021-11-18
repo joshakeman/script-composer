@@ -122,7 +122,7 @@ export const DayContainer: FC<ContainerProps> = ({ day, setLines, addLine, handl
       <Paper
             sx={{
                 backgroundColor:'lightblue',
-                margin: '0 10px 10px 10px',
+                margin: '10px 0',
                 padding: '10px'
             }}
             >

@@ -1,18 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import './App.css';
-import TextBox from './components/TextBox'
-import ScriptContainer from './components/ScriptContainer';
-import Container from './components/ScriptContainer'
+import Appbar from './components/Appbar'
+import ScriptContainer from './components/ScriptContainer'
+import Configuration from './components/Configuration'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 function App() {
   return (
     <div className="App">
-        <DndProvider backend={HTML5Backend}>
-          <Container />
-        </DndProvider>
+    <BrowserRouter>
+      <Appbar />
+      <div className="main">
+          <Routes>
+            <Route path="/" element={<Configuration />} />
+            <Route path="/builder" element={
+              <DndProvider backend={HTML5Backend}>
+                <ScriptContainer />
+              </DndProvider>
+            } />
+          </Routes>
+      </div>
+    </BrowserRouter>
     </div>
   );
 }
