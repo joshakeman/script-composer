@@ -10,17 +10,19 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Appbar />
-        <Routes>
-          <Route path="/" element={<Configuration />} />
-          <Route path="/builder" element={
-            <DndProvider backend={HTML5Backend}>
-              <ScriptContainer />
-            </DndProvider>
-          } />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Appbar />
+      <div className="main">
+          <Routes>
+            <Route path="/" element={<Configuration />} />
+            <Route path="/builder" element={
+              <DndProvider backend={HTML5Backend}>
+                <ScriptContainer />
+              </DndProvider>
+            } />
+          </Routes>
+      </div>
+    </BrowserRouter>
     </div>
   );
 }
