@@ -6,7 +6,7 @@ export const slice = createSlice({
     days: [],
   },
   reducers: {
-    addDay: (state, action) => {
+    addNewDay: state => {
             state.days.push({
                 ix: state.days.length,
                 lines: [{
@@ -43,7 +43,7 @@ export const slice = createSlice({
   },
 });
 
-export const { addDay } = slice.actions;
+export const { addNewDay } = slice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
