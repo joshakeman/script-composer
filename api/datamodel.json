@@ -1,0 +1,90 @@
+[
+    {
+        "ix": 0,
+        "lines": [
+            {
+                "id": 1,
+                "text": "This is the first {{ Thwonk }} ",
+                "character": "Beatrice",
+                "selectedVariable": "",
+                "variables": [
+                    "Thwonk"
+                ],
+                "time": "2021-11-18T17:20:00.199Z",
+                "switchStatus": true,
+                "yesAnswer": "Oh ok",
+                "noAnswer": "Oh nooooo",
+                "timeoutAnswer": "The timeout"
+            },
+            {
+                "id": 2,
+                "text": "BLah blah blah",
+                "character": "Hero",
+                "selectedVariable": "",
+                "variables": [],
+                "time": "2021-11-18T12:24:00.488Z",
+                "switchStatus": false,
+                "yesAnswer": "",
+                "noAnswer": "",
+                "timeoutAnswer": ""
+            },
+            {
+                "id": 3,
+                "text": "fhooooooo",
+                "character": "Beatrice",
+                "selectedVariable": "",
+                "variables": [],
+                "time": "2021-11-18T08:20:00.729Z",
+                "switchStatus": false,
+                "yesAnswer": "",
+                "noAnswer": "",
+                "timeoutAnswer": ""
+            },
+            {
+                "id": 4,
+                "text": "fhhffhfhfhfhhffhfhhf",
+                "character": "Hero",
+                "selectedVariable": "",
+                "variables": [],
+                "time": "2021-11-18T13:20:00.909Z",
+                "switchStatus": false,
+                "yesAnswer": "",
+                "noAnswer": "",
+                "timeoutAnswer": ""
+            }
+        ]
+    },
+    {
+        "ix": 1,
+        "lines": [
+            {
+                "id": 1,
+                "text": "day two line 1",
+                "character": "Beatrice",
+                "selectedVariable": "",
+                "variables": [],
+                "time": "2021-11-18T20:19:00.000Z",
+                "switchStatus": false,
+                "yesAnswer": "",
+                "noAnswer": "",
+                "timeoutAnswer": ""
+            },
+            {
+                "id": 2,
+                "text": "Day two line 2 {{ Plunk }}{{ Blink }}{{ Thwonk }}",
+                "character": "Beatrice",
+                "selectedVariable": "",
+                "variables": [
+                    "Plunk",
+                    "Blink",
+                    "Thwonk"
+                ],
+                "time": "2021-11-18T21:24:00.556Z",
+                "switchStatus": false,
+                "yesAnswer": "",
+                "noAnswer": "",
+                "timeoutAnswer": ""
+            }
+        ]
+    }
+]

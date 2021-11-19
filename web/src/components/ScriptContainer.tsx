@@ -1,5 +1,4 @@
 import React, {useState, useCallback, useEffect} from 'react'
-import { useSelector, useDispatch } from 'react-redux';
 import TextBox from './TextBox'
 import Button from '@mui/material/Button';
 // import { Line } from './Constants'
@@ -11,8 +10,6 @@ import Tab from '@mui/material/Tab';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
-
-import { addNewDay, selectDayList } from '../redux/reducers/script'
 
 interface ScriptState {
     days: Array<Day>
@@ -37,14 +34,11 @@ export interface Day {
 }
 
 export default function ScriptContainer() {
-    const dayList = useSelector(selectDayList);
-    const dispatch = useDispatch();
-
     useEffect(()=> {
-        if (dayList.length === 1 && dayList[0].lines.length === 1) {
+        if (days.length === 1 && days[0].lines.length === 1) {
             handleTabChange({} as React.SyntheticEvent, 1)
         }
-    },[])   
+    },[])
 
     const [days, setDays] = useState<ScriptState["days"]>([{
         ix: 0,
@@ -65,8 +59,22 @@ export default function ScriptContainer() {
     }])
     const [selectedDay, setSelectedDay] = useState<ScriptState["selectedDay"]>({} as Day)
 
-    const dispatchAddDay = () => {
-        dispatch(addNewDay())
+    const addDay = () => {
+        setDays(prevState => [...prevState,{
+            ix: prevState.length,
+            lines: [{
+                id: 1, 
+                text: "", 
+                character: "", 
+                selectedVariable: "", 
+                variables: [], 
+                time: null, 
+                switchStatus: false,
+                yesAnswer: "",
+                noAnswer: "",
+                timeoutAnswer: ""
+            }]
+        }])
     }
 
     const [value, setValue] = React.useState(1);
@@ -75,6 +83,12 @@ export default function ScriptContainer() {
       setValue(newValue);
       setSelectedDay(days[newValue-1])
     };
+
+    // const setLines= () => {
+    //     let newArr = [...days]; // copying the old datas array
+    //     newArr[index].text = e.target.value; // replace e.target.value with whatever you want to change it to
+    //     setLines(newArr);
+    // }
 
     const handleChangeText = (dayIndex: number, index: number) => (e: any) => {
         console.log(`Calling handle change text on day ${dayIndex}, line ${index}`)
@@ -143,8 +157,11 @@ export default function ScriptContainer() {
     }
 
     const addLine = (dayIndex: number) => {
+        console.log("day index is: ", dayIndex)
         let newArr = [...days]; // copying the old datas array
+        console.log(newArr)
         let updatedDay = {...newArr[dayIndex]}
+        console.log(updatedDay)
         updatedDay.lines.push({
             id: updatedDay.lines.length+1, 
             text: "", 
@@ -170,7 +187,9 @@ export default function ScriptContainer() {
 
         let newArr = [...days]; // copying the old datas array
         let updatedDay = {...newArr[dayIndex]}
+        console.log(updatedDay)
         updatedDay.lines = newLines
+        console.log(updatedDay)
         newArr[dayIndex] = updatedDay
         setDays(newArr);
     }
@@ -192,6 +211,10 @@ export default function ScriptContainer() {
         setDays(newArr);
     }
 
+    const uploadScript = () => {
+        console.log(days)
+    }
+
     return (
         <>
             <div style={{display:'flex', flexDirection:'column'}}>
@@ -199,13 +222,16 @@ export default function ScriptContainer() {
                     <Divider />
                         <Toolbar sx={{width: '90%', display: 'flex', justifyContent: 'space-between' }} >
                             <h1>Script Builder</h1>
-                            <Button variant="contained" color="secondary" >Save</Button>
+                            <div>
+                                <Button sx={{marginRight: '10px'}} variant="contained" color="success" >Save</Button>
+                                <Button variant="contained" color="secondary" onClick={uploadScript} >Upload</Button>
+                            </div>
                         </Toolbar>
                     <Divider />
                 </Stack>
             </div>
             <div style={{overflowX: 'scroll', margin: '10px 0'}}>
-                <Button variant="contained" onClick={dispatchAddDay}>Add Day</Button>
+                <Button variant="contained" onClick={addDay}>Add Day</Button>
                 <Tabs
                     value={value}
                     onChange={handleTabChange}
@@ -217,9 +243,10 @@ export default function ScriptContainer() {
                     }}
                 >
                     {
-                        dayList.map((day: any, index: any) => <Tab value={index+1} label={index+1} />)
+                        days.map((day, index) => <Tab value={index+1} label={index+1} />)
                     }
                 </Tabs>
+                {/* {days.map((day, index) => <DayContainer index={index}/>)} */}
                 {selectedDay.ix !== undefined ? (
                     <DayContainer 
                     day={selectedDay} 
