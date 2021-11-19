@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/aws/aws-sdk-go v1.41.11
+	github.com/google/go-cmp v0.5.6
 	github.com/lib/pq v1.10.4
 )
 
