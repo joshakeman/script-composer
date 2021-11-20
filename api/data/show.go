@@ -19,7 +19,7 @@ func (s *ShowRepo) GetByID(id int) {
 
 }
 
-func (s *ShowRepo) Create(id int) (int64, error) {
+func (s *ShowRepo) Create(sh Show) (int64, error) {
 	stmt, err := s.db.Prepare(`
 		INSERT INTO shows
 		(title, subdomain, start_date, img_path_square, img_path_landscape, versions)
@@ -29,17 +29,54 @@ func (s *ShowRepo) Create(id int) (int64, error) {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(stmt)
+	res, err := stmt.Exec(
+		sh.Title,
+		sh.Subdomain,
+		sh.StartDate,
+		sh.ImgPathSquare,
+		sh.ImgPathLandscape,
+		sh.Versions,
+	)
 	if err != nil {
 		return 0, err
 	}
 
-	lastId, err := res.LastInsertId()
+	ra, err := res.RowsAffected()
 	if err != nil {
 		return 0, err
 	}
 
-	return lastId, nil
+	return ra, nil
+}
+
+func (s *ShowRepo) ListAll() ([]Show, error) {
+	rows, err := s.db.Query(`
+	SELECT * FROM shows
+	`)
+	if err != nil {
+		return []Show{}, err
+	}
+
+	var shows []Show
+
+	for rows.Next() {
+		var s Show
+		err := rows.Scan(
+			&s.ID,
+			&s.Title,
+			&s.ImgPathSquare,
+			&s.ImgPathLandscape,
+			&s.StartDate,
+			&s.Versions,
+			&s.Subdomain,
+		)
+		if err != nil {
+			return []Show{}, err
+		}
+		shows = append(shows, s)
+	}
+
+	return shows, nil
 }
 
 type Show struct {

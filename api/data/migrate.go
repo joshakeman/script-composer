@@ -24,13 +24,14 @@ var DDLs = map[string]string{
 		img_path varchar(2500) NULL,
 		phone_number varchar(30) NULL
 	);`, characters),
-	shows: fmt.Sprintf(`CREATE TABLE public."%s" (
+	shows: fmt.Sprintf(`CREATE TABLE public.%s (
 		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 		title varchar(500) NOT NULL,
 		img_path_square varchar(2500) NULL,
 		img_path_landscape varchar(2500) NULL,
-		start_date time with time zone NULL,
-		versions varchar NULL
+		start_date timetz NULL,
+		versions varchar NULL,
+		subdomain varchar NULL
 	);`, shows),
 	users: fmt.Sprintf(`CREATE TABLE public."%s" (
 		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,

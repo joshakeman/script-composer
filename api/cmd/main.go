@@ -7,8 +7,12 @@ import (
 
 func main() {
 	db := data.Connect()
-	err := data.RunMigrations(db)
+
+	cr := data.NewShowRepo(db)
+
+	shows, err := cr.ListAll()
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println(shows)
 }

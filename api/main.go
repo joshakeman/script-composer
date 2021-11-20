@@ -1,14 +1,15 @@
 package api
 
 import (
-	"fmt"
+	"log"
 	"script-composer/data"
 )
 
 func main() {
 	db := data.Connect()
 
-	cr := data.NewCharacterRepo(db)
+	cr := data.NewShowRepo(db)
 
-	fmt.Println(cr.ListAll())
+	shows, _ := cr.ListAll()
+	log.Println(shows)
 }
