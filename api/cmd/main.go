@@ -1,7 +1,7 @@
-package api
+package main
 
 import (
-	"fmt"
+	"log"
 	"script-composer/data"
 )
 
@@ -10,5 +10,5 @@ func main() {
 
 	cr := data.NewCharacterRepo(db)
 
-	fmt.Println(cr.ListAll())
+	log.Println(cr.ListAll())
 }

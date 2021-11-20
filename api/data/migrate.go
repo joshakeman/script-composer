@@ -1,9 +1,13 @@
 package data
 
-import "fmt"
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+)
 
 const (
-	infoSchema  = "public"
+	infoSchema  = "information_schema"
 	tableSchema = "textplay"
 	characters  = "characters"
 	shows       = "shows"
@@ -36,17 +40,85 @@ var DDLs = map[string]string{
 	);`, users),
 }
 
-var checkForTableSQL = fmt.Sprintf(`
+var checkForTableSQL = `
 SELECT EXISTS (
-	SELECT 1
-	FROM   %s.tables 
+	SELECT FROM %s.tables
 	WHERE  table_schema = '%s'
-	AND    table_name = '%s'
-	);
-`)
+	AND    table_name   = '%s'
+ );`
+
+var CreateTableSchema = ` CREATE TABLE public.%s (
+	column1 time with time zone NULL,
+	versions varchar NULL
+);
+`
+var checkForTableSchemaSQL = `
+SELECT EXISTS (
+	SELECT FROM information_schema.tables
+	WHERE  table_schema = '%s'
+ )`
+
+func GetCheckforTableSchemaQuery(tableSchema string) string {
+	return fmt.Sprintf(
+		checkForTableSchemaSQL, tableSchema,
+	)
+}
+
+func CreateTableSchemaQuery(tableSchema string) string {
+	return fmt.Sprintf(
+		CreateTableSchema, tableSchema,
+	)
+}
 
 func GetCheckforTableQuery(infoSchema, tableSchema, tableName string) string {
 	return fmt.Sprintf(
 		checkForTableSQL, infoSchema, tableSchema, tableName,
 	)
+}
+
+func RunMigrations(db *sql.DB) error {
+	/* First check for table schema */
+	qry := GetCheckforTableSchemaQuery(tableSchema)
+
+	row := db.QueryRow(qry)
+	if row.Err() != nil {
+		return row.Err()
+	}
+	var p checkExists
+	if p.Exists == false {
+		fmt.Println("Schema doesn't exist")
+		qry := CreateTableSchemaQuery(tableSchema)
+		row := db.QueryRow(qry)
+		if row.Err() != nil {
+			return row.Err()
+		}
+	}
+
+	for _, tableName := range Tables {
+		if val, ok := DDLs[tableName]; ok {
+			qry := GetCheckforTableQuery(infoSchema, tableSchema, tableName)
+
+			row := db.QueryRow(qry)
+			if row.Err() != nil {
+				return row.Err()
+			}
+			var p checkExists
+			row.Scan(&p)
+			if p.Exists == false {
+				fmt.Println("Table doesn't exist")
+				qry := val
+				row := db.QueryRow(qry)
+				if row.Err() != nil {
+					return row.Err()
+				}
+			}
+		} else {
+			return errors.New(fmt.Sprintf("Expected to find table definition for %s but didn't", tableName))
+		}
+	}
+	return nil
+}
+
+type checkExists struct {
+	Exists bool `json:"exists"`
 }
