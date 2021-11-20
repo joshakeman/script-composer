@@ -11,3 +11,7 @@ func NewShowRepo(db *sql.DB) *ShowRepo {
 		db: db,
 	}
 }
+
+func (s *ShowRepo) GetByID(id int) {
+
+}
