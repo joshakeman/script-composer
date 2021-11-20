@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 )
 
 const (
@@ -43,8 +44,7 @@ var DDLs = map[string]string{
 var checkForTableSQL = `
 SELECT EXISTS (
 	SELECT FROM %s.tables
-	WHERE  table_schema = '%s'
-	AND    table_name   = '%s'
+	WHERE table_name   = '%s'
  );`
 
 var CreateTableSchema = ` CREATE TABLE public.%s (
@@ -71,29 +71,15 @@ func CreateTableSchemaQuery(tableSchema string) string {
 }
 
 func GetCheckforTableQuery(infoSchema, tableSchema, tableName string) string {
+	log.Println(fmt.Sprintf(
+		checkForTableSQL, infoSchema, tableName,
+	))
 	return fmt.Sprintf(
-		checkForTableSQL, infoSchema, tableSchema, tableName,
+		checkForTableSQL, infoSchema, tableName,
 	)
 }
 
 func RunMigrations(db *sql.DB) error {
-	/* First check for table schema */
-	qry := GetCheckforTableSchemaQuery(tableSchema)
-
-	row := db.QueryRow(qry)
-	if row.Err() != nil {
-		return row.Err()
-	}
-	var p checkExists
-	if p.Exists == false {
-		fmt.Println("Schema doesn't exist")
-		qry := CreateTableSchemaQuery(tableSchema)
-		row := db.QueryRow(qry)
-		if row.Err() != nil {
-			return row.Err()
-		}
-	}
-
 	for _, tableName := range Tables {
 		if val, ok := DDLs[tableName]; ok {
 			qry := GetCheckforTableQuery(infoSchema, tableSchema, tableName)
@@ -102,9 +88,9 @@ func RunMigrations(db *sql.DB) error {
 			if row.Err() != nil {
 				return row.Err()
 			}
-			var p checkExists
+			var p []byte
 			row.Scan(&p)
-			if p.Exists == false {
+			if string(p) == "false" {
 				fmt.Println("Table doesn't exist")
 				qry := val
 				row := db.QueryRow(qry)

@@ -7,8 +7,8 @@ import (
 
 func main() {
 	db := data.Connect()
-
-	cr := data.NewCharacterRepo(db)
-
-	log.Println(cr.ListAll())
+	err := data.RunMigrations(db)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
