@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"script-composer/data"
 )
 
@@ -13,8 +12,6 @@ func main() {
 	flag.Parse()
 
 	if *migrate {
-		err := data.RunMigrations(db)
-		log.Fatal(err)
+		data.GoMigrate(db)
 	}
-
 }

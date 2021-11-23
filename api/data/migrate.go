@@ -1,121 +1,12 @@
 package data
 
 import (
-	"database/sql"
-	"errors"
-	"fmt"
+	"github.com/jinzhu/gorm"
 )
 
-const (
-	infoSchema  = "information_schema"
-	tableSchema = "textplay"
-	characters  = "characters"
-	shows       = "shows"
-	users       = "users"
-	lines       = "lines"
-)
-
-var Tables = []string{characters, shows, users, lines}
-
-var DDLs = map[string]string{
-	characters: fmt.Sprintf(`CREATE TABLE public."%s" (
-		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-		name varchar(500) NOT NULL,
-		img_path varchar(2500) NULL,
-		phone_number varchar(30) NULL
-	);`, characters),
-	shows: fmt.Sprintf(`CREATE TABLE public.%s (
-		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-		title varchar(500) NOT NULL,
-		img_path_square varchar(2500) NULL,
-		img_path_landscape varchar(2500) NULL,
-		start_date timetz NULL,
-		versions varchar NULL,
-		subdomain varchar NULL
-	);`, shows),
-	users: fmt.Sprintf(`CREATE TABLE public."%s" (
-		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-		title varchar(500) NOT NULL,
-		img_path_square varchar(2500) NULL,
-		img_path_landscape varchar(2500) NULL,
-		start_date time with time zone NULL
-	);`, users),
-	lines: fmt.Sprintf(`CREATE TABLE public."%s" (
-		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-		content varchar(20000) NOT NULL,
-		hour int NOT NULL,
-		minute int NOT NULL,
-		vars varchar(500) NOT NULL,
-		question bool NULL,
-		timeout_answer varchar(2000),
-		yes_answer varchar(2000),
-		no_answer varchar(2000),
-		day int NOT NULL,
-		img_url varchar(1000) NOT NULL
-	);`, lines),
-}
-
-var checkForTableSQL = `
-SELECT EXISTS (
-	SELECT FROM %s.tables
-	WHERE table_name   = '%s'
- );`
-
-var CreateTableSchema = ` CREATE TABLE public.%s (
-	column1 time with time zone NULL,
-	versions varchar NULL
-);
-`
-var checkForTableSchemaSQL = `
-SELECT EXISTS (
-	SELECT FROM information_schema.tables
-	WHERE  table_schema = '%s'
- )`
-
-func GetCheckforTableSchemaQuery(tableSchema string) string {
-	return fmt.Sprintf(
-		checkForTableSchemaSQL, tableSchema,
-	)
-}
-
-func CreateTableSchemaQuery(tableSchema string) string {
-	return fmt.Sprintf(
-		CreateTableSchema, tableSchema,
-	)
-}
-
-func GetCheckforTableQuery(infoSchema, tableSchema, tableName string) string {
-	return fmt.Sprintf(
-		checkForTableSQL, infoSchema, tableName,
-	)
-}
-
-func RunMigrations(db *sql.DB) error {
-	for _, tableName := range Tables {
-		if val, ok := DDLs[tableName]; ok {
-			qry := GetCheckforTableQuery(infoSchema, tableSchema, tableName)
-
-			row := db.QueryRow(qry)
-			if row.Err() != nil {
-				return row.Err()
-			}
-			var p []byte
-			row.Scan(&p)
-			if string(p) == "false" {
-				fmt.Println("Table doesn't exist")
-				qry := val
-				row := db.QueryRow(qry)
-				if row.Err() != nil {
-					return row.Err()
-				}
-			}
-		} else {
-			return errors.New(fmt.Sprintf("Expected to find table definition for %s but didn't", tableName))
-		}
-	}
-	return nil
-}
-
-type checkExists struct {
-	Exists bool `json:"exists"`
+func GoMigrate(db *gorm.DB) {
+	db.AutoMigrate(Character{})
+	db.AutoMigrate(Line{})
+	db.AutoMigrate(Show{})
+	db.AutoMigrate(User{})
 }

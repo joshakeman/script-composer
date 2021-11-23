@@ -1,15 +1,17 @@
 package data
 
 import (
-	"database/sql"
 	"log"
 
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+
+	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
 
-func Connect() *sql.DB {
-	connStr := "postgres://scriptcomposer:pass@localhost/scriptcomposer?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+func Connect() *gorm.DB {
+	dsn := "host=localhost port=5432 user=scriptcomposer dbname=scriptcomposer sslmode=disable password=scriptcomposer"
+	db, err := gorm.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}

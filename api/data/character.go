@@ -3,6 +3,8 @@ package data
 import (
 	"database/sql"
 	"log"
+
+	"github.com/jinzhu/gorm"
 )
 
 type CharacterRepo struct {
@@ -61,7 +63,8 @@ func (c *CharacterRepo) Create(name, imgPath, phoneNumber string) error {
 }
 
 type Character struct {
-	ID          int    `json:"id"`
+	gorm.Model
+
 	Name        string `json:"name"`
 	ImagePath   string `json:"img_path"`
 	PhoneNumber string `json:"phone_number"`

@@ -3,6 +3,9 @@ package data
 import (
 	"database/sql"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/jinzhu/gorm"
 )
 
 type ShowRepo struct {
@@ -80,7 +83,9 @@ func (s *ShowRepo) ListAll() ([]Show, error) {
 }
 
 type Show struct {
-	ID               int       `json:"id"`
+	gorm.Model
+
+	UUID             uuid.UUID `json:"uuid"`
 	Title            string    `json:"title"`
 	Subdomain        string    `json:"subdomain"`
 	StartDate        time.Time `json:"start_date"`
