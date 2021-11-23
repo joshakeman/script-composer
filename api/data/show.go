@@ -1,7 +1,7 @@
 package data
 
 import (
-	"database/sql"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,74 +9,42 @@ import (
 )
 
 type ShowRepo struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func NewShowRepo(db *sql.DB) *ShowRepo {
+func NewShowRepo(db *gorm.DB) *ShowRepo {
 	return &ShowRepo{
 		db: db,
 	}
 }
 
-func (s *ShowRepo) GetByID(id int) {
+func (s *ShowRepo) GetByUUID(uuid uuid.UUID) (Show, error) {
+	var show Show
+	err := s.db.Where("uuid = ?", uuid).First(&show).Error
+	if err != nil {
+		return Show{}, err
+	}
 
+	return show, nil
 }
 
-func (s *ShowRepo) Create(sh Show) (int64, error) {
-	stmt, err := s.db.Prepare(`
-		INSERT INTO shows
-		(title, subdomain, start_date, img_path_square, img_path_landscape, versions)
-		VALUES($1, $2, $3, $4, $5, $6)
-	`)
-	if err != nil {
-		return 0, err
+func (s *ShowRepo) Create(sh Show) error {
+	sh.UUID = uuid.New()
+	res := s.db.Create(&sh)
+	if res.Error != nil {
+		return res.Error
 	}
 
-	res, err := stmt.Exec(
-		sh.Title,
-		sh.Subdomain,
-		sh.StartDate,
-		sh.ImgPathSquare,
-		sh.ImgPathLandscape,
-		sh.Versions,
-	)
-	if err != nil {
-		return 0, err
-	}
-
-	ra, err := res.RowsAffected()
-	if err != nil {
-		return 0, err
-	}
-
-	return ra, nil
+	log.Println("Rows affected: ", res.RowsAffected)
+	return nil
 }
 
 func (s *ShowRepo) ListAll() ([]Show, error) {
-	rows, err := s.db.Query(`
-	SELECT * FROM shows
-	`)
+	log.Println("Running list all shows")
+	var shows []Show
+	err := s.db.Find(&shows).Error
 	if err != nil {
 		return []Show{}, err
-	}
-
-	var shows []Show
-
-	for rows.Next() {
-		var s Show
-		err := rows.Scan(
-			&s.ID,
-			&s.Title,
-			&s.ImgPathSquare,
-			&s.ImgPathLandscape,
-			&s.StartDate,
-			&s.Versions,
-			&s.Subdomain,
-		)
-		if err != nil {
-			return []Show{}, err
-		}
-		shows = append(shows, s)
 	}
 
 	return shows, nil

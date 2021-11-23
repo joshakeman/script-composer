@@ -1,7 +1,13 @@
 package api
 
-type Launch struct {
-	Twilio TwilioClient
+import "github.com/jinzhu/gorm"
+
+type Launcher struct {
+	db *gorm.DB
+}
+
+func (l *Launcher) Launch() error {
+	return nil
 }
 
 /*
