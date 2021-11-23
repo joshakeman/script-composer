@@ -1,18 +1,20 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"script-composer/data"
 )
 
 func main() {
+	migrate := flag.Bool("migrate", false, "Run db migrations on startup")
 	db := data.Connect()
 
-	cr := data.NewShowRepo(db)
+	flag.Parse()
 
-	shows, err := cr.ListAll()
-	if err != nil {
+	if *migrate {
+		err := data.RunMigrations(db)
 		log.Fatal(err)
 	}
-	log.Println(shows)
+
 }

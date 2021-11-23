@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 )
 
 const (
@@ -13,9 +12,10 @@ const (
 	characters  = "characters"
 	shows       = "shows"
 	users       = "users"
+	lines       = "lines"
 )
 
-var Tables = []string{characters, shows, users}
+var Tables = []string{characters, shows, users, lines}
 
 var DDLs = map[string]string{
 	characters: fmt.Sprintf(`CREATE TABLE public."%s" (
@@ -40,6 +40,19 @@ var DDLs = map[string]string{
 		img_path_landscape varchar(2500) NULL,
 		start_date time with time zone NULL
 	);`, users),
+	lines: fmt.Sprintf(`CREATE TABLE public."%s" (
+		id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+		content varchar(20000) NOT NULL,
+		hour int NOT NULL,
+		minute int NOT NULL,
+		vars varchar(500) NOT NULL,
+		question bool NULL,
+		timeout_answer varchar(2000),
+		yes_answer varchar(2000),
+		no_answer varchar(2000),
+		day int NOT NULL,
+		img_url varchar(1000) NOT NULL
+	);`, lines),
 }
 
 var checkForTableSQL = `
@@ -72,9 +85,6 @@ func CreateTableSchemaQuery(tableSchema string) string {
 }
 
 func GetCheckforTableQuery(infoSchema, tableSchema, tableName string) string {
-	log.Println(fmt.Sprintf(
-		checkForTableSQL, infoSchema, tableName,
-	))
 	return fmt.Sprintf(
 		checkForTableSQL, infoSchema, tableName,
 	)
